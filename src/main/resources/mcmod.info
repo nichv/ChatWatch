@@ -1,0 +1,16 @@
+[
+{
+  "modid": "chatwatch",
+  "name": "ChatWatch",
+  "description": "Watch the chat on indefinitely for the Hypixel Network.",
+  "version": "1.0.0",
+  "mcversion": "1.8.9",
+  "url": "https://github.com/nichv",
+  "updateUrl": "",
+  "authorList": ["nich"],
+  "credits": "nich",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
