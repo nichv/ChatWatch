@@ -123,7 +123,7 @@ public class chatwatch {
                     isStrafing = false;
 
                     // hesitation before next move
-                    nextStrafeTime = currentTime + (2000 + (long)(Math.random() * 8000)) * 0.85);
+                    nextStrafeTime = currentTime + (long)((2000 + (Math.random() * 8000)) * 0.85);
 
                     KeyBinding.setKeyBindState(
                             mc.gameSettings.keyBindLeft.getKeyCode(), false
