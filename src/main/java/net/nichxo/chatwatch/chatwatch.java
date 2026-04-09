@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 import org.lwjgl.input.Keyboard;
 
-@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.3", clientSideOnly = true)
+@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.6.7", clientSideOnly = true)
 public class chatwatch {
 
     private final Minecraft mc = Minecraft.getMinecraft();

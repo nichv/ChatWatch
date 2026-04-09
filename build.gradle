@@ -16,9 +16,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.0"
-group= "nichxo.larp.chatwalk" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "chatwalk"
+version = "1.6.7"
+group= "nichxo.larp.chatwatch" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "chatwatch"
 
 minecraft {
     version = "1.8.9-11.15.1.2318-1.8.9"
