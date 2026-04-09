@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 import org.lwjgl.input.Keyboard;
 
-@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.1", clientSideOnly = true)
+@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.3", clientSideOnly = true)
 public class chatwatch {
 
     private final Minecraft mc = Minecraft.getMinecraft();
@@ -22,14 +22,13 @@ public class chatwatch {
     private boolean isStrafing = false;
     private boolean strafeLeft = false;
     private long strafeEndTime = 0;
-    private long nextStrafeTime = System.currentTimeMillis() + 40000;
+    private long nextStrafeTime = System.currentTimeMillis() + 4000;
 
-    // ---- Chat reopen ----
-    private boolean shouldReopenChat = false;
-    private long reopenTime = 0;
-
-    // ---- Human timing ----
     private long pauseStrafeUntil = 0;
+
+    // ---- Simple control flag ----
+    private boolean chatWatchActive = false;
+    private boolean wasChatOpen = false;
 
     private static KeyBinding chatKey;
 
@@ -44,69 +43,56 @@ public class chatwatch {
     public void onTick(ClientTickEvent event) {
 
         long currentTime = System.currentTimeMillis();
+        boolean isChatOpen = mc.currentScreen instanceof GuiChat;
 
         // --------------------
-        // OPEN CHAT
+        // PRESS P → ENABLE MODE
         // --------------------
         if (chatKey.isPressed()) {
+            chatWatchActive = true;
             mc.displayGuiScreen(new GuiChat());
 
-            // small human reaction delay before movement
             pauseStrafeUntil = currentTime + (100 + (int)(Math.random() * 150));
         }
 
         // --------------------
-        // DETECT MESSAGE SEND
+        // CHAT CLOSED
         // --------------------
-        if (mc.currentScreen instanceof GuiChat && Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+        if (wasChatOpen && !isChatOpen) {
 
-            shouldReopenChat = true;
+            if (chatWatchActive) {
 
-            // human delay before reopening
-            reopenTime = currentTime + (120 + (int)(Math.random() * 140));
-
-            // pause strafing after sending (thinking moment)
-            pauseStrafeUntil = currentTime + (300 + (int)(Math.random() * 400));
-
-            // reset next strafe (avoid instant movement)
-            nextStrafeTime = currentTime + (20000 + (long)(Math.random() * 30000));
+                // ESC pressed → fully disable
+                if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+                    chatWatchActive = false;
+                    resetStrafe();
+                } else {
+                    // Otherwise assume ENTER → reopen chat
+                    mc.displayGuiScreen(new GuiChat());
+                }
+            }
         }
 
-        // --------------------
-        // REOPEN CHAT (DELAYED)
-        // --------------------
-        if (!(mc.currentScreen instanceof GuiChat)
-                && shouldReopenChat
-                && currentTime >= reopenTime) {
-
-            mc.displayGuiScreen(new GuiChat());
-            shouldReopenChat = false;
-        }
+        wasChatOpen = isChatOpen;
 
         // --------------------
-        // HUMAN-LIKE STRAFING
+        // STRAFING ONLY WHEN ACTIVE + CHAT OPEN
         // --------------------
-        if (mc.currentScreen instanceof GuiChat) {
+        if (chatWatchActive && isChatOpen) {
 
-            // don't move during "thinking"
             if (currentTime < pauseStrafeUntil) {
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindLeft.getKeyCode(), false);
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindRight.getKeyCode(), false);
+                stopMovement();
                 return;
             }
 
-            // start new strafe randomly
             if (!isStrafing && currentTime >= nextStrafeTime) {
                 isStrafing = true;
 
                 strafeLeft = Math.random() < 0.5;
-
-                // uneven duration (human inconsistency)
                 long duration = 200 + (long)(Math.random() * 900);
                 strafeEndTime = currentTime + duration;
             }
 
-            // active strafe
             if (isStrafing) {
 
                 KeyBinding.setKeyBindState(
@@ -122,30 +108,39 @@ public class chatwatch {
                 if (currentTime >= strafeEndTime) {
                     isStrafing = false;
 
-                    // hesitation before next move
-                    nextStrafeTime = currentTime + (long)((2000 + (Math.random() * 8000)) * 1.350);
+                    nextStrafeTime = currentTime + (2000 + (long)(Math.random() * 8000));
 
-                    KeyBinding.setKeyBindState(
-                            mc.gameSettings.keyBindLeft.getKeyCode(), false
-                    );
-
-                    KeyBinding.setKeyBindState(
-                            mc.gameSettings.keyBindRight.getKeyCode(), false
-                    );
+                    stopMovement();
                 }
             }
 
         } else {
-            // reset keys outside chat
-            KeyBinding.setKeyBindState(
-                    mc.gameSettings.keyBindLeft.getKeyCode(),
-                    Keyboard.isKeyDown(mc.gameSettings.keyBindLeft.getKeyCode())
-            );
-
-            KeyBinding.setKeyBindState(
-                    mc.gameSettings.keyBindRight.getKeyCode(),
-                    Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode())
-            );
+            restoreMovement();
         }
+    }
+
+    // --------------------
+    // HELPERS
+    // --------------------
+    private void stopMovement() {
+        KeyBinding.setKeyBindState(mc.gameSettings.keyBindLeft.getKeyCode(), false);
+        KeyBinding.setKeyBindState(mc.gameSettings.keyBindRight.getKeyCode(), false);
+    }
+
+    private void restoreMovement() {
+        KeyBinding.setKeyBindState(
+                mc.gameSettings.keyBindLeft.getKeyCode(),
+                Keyboard.isKeyDown(mc.gameSettings.keyBindLeft.getKeyCode())
+        );
+
+        KeyBinding.setKeyBindState(
+                mc.gameSettings.keyBindRight.getKeyCode(),
+                Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode())
+        );
+    }
+
+    private void resetStrafe() {
+        isStrafing = false;
+        stopMovement();
     }
 }
