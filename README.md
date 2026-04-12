@@ -5,6 +5,7 @@ vibe coded with chatgpt mostly
 **Features:**
 - Automatically reopen chat after typing
 - Movement mechanism to stop getting kicked to Limbo
+- Keybind can be changed in control settings
 
 
 Things I was thinking of fixing/adding
