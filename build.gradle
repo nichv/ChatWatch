@@ -16,7 +16,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.6.7"
+version = "1.6.8"
 group= "nichxo.larp.chatwatch" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "chatwatch"
 

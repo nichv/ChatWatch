@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 import org.lwjgl.input.Keyboard;
 
-@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.6.7", clientSideOnly = true)
+@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.6.8", clientSideOnly = true)
 public class chatwatch {
 
     private final Minecraft mc = Minecraft.getMinecraft();
@@ -22,7 +22,7 @@ public class chatwatch {
     private boolean isStrafing = false;
     private boolean strafeLeft = false;
     private long strafeEndTime = 0;
-    private long nextStrafeTime = System.currentTimeMillis() + 4000;
+    private long nextStrafeTime = System.currentTimeMillis() + 60000;
 
     private long pauseStrafeUntil = 0;
 
@@ -52,7 +52,7 @@ public class chatwatch {
             chatWatchActive = true;
             mc.displayGuiScreen(new GuiChat());
 
-            pauseStrafeUntil = currentTime + (100 + (int)(Math.random() * 150));
+            pauseStrafeUntil = currentTime + 60000 + (long)(Math.random() * 8000);
         }
 
         // --------------------
@@ -76,10 +76,19 @@ public class chatwatch {
         wasChatOpen = isChatOpen;
 
         // --------------------
-        // STRAFING ONLY WHEN ACTIVE + CHAT OPEN
+        // STRICT CONTROL WHEN ACTIVE
         // --------------------
-        if (chatWatchActive && isChatOpen) {
+        if (chatWatchActive) {
 
+            // If ANY GUI other than chat is open → block movement
+            if (!(mc.currentScreen instanceof GuiChat)) {
+                stopMovement();
+                return;
+            }
+
+            // --------------------
+            // STRAFING ONLY WHEN CHAT OPEN
+            // --------------------
             if (currentTime < pauseStrafeUntil) {
                 stopMovement();
                 return;
@@ -89,7 +98,7 @@ public class chatwatch {
                 isStrafing = true;
 
                 strafeLeft = Math.random() < 0.5;
-                long duration = 200 + (long)(Math.random() * 900);
+                long duration = 500 + (long)(Math.random() * 900);
                 strafeEndTime = currentTime + duration;
             }
 
@@ -105,16 +114,18 @@ public class chatwatch {
                         !strafeLeft
                 );
 
-                if (currentTime >= strafeEndTime) {
-                    isStrafing = false;
+			if (currentTime >= strafeEndTime) {
+				isStrafing = false;
 
-                    nextStrafeTime = currentTime + (2000 + (long)(Math.random() * 8000));
+			// 1 minute delay (+ small randomness)
+			nextStrafeTime = currentTime + 60000 + (long)(Math.random() * 5000);
 
-                    stopMovement();
-                }
-            }
+			stopMovement();
+			}
+			}
 
         } else {
+            // System OFF → normal controls
             restoreMovement();
         }
     }
@@ -128,16 +139,24 @@ public class chatwatch {
     }
 
     private void restoreMovement() {
-        KeyBinding.setKeyBindState(
-                mc.gameSettings.keyBindLeft.getKeyCode(),
-                Keyboard.isKeyDown(mc.gameSettings.keyBindLeft.getKeyCode())
-        );
 
-        KeyBinding.setKeyBindState(
-                mc.gameSettings.keyBindRight.getKeyCode(),
-                Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode())
-        );
+    // If ANY GUI is open, block movement completely
+    if (mc.currentScreen != null) {
+        stopMovement();
+        return;
     }
+
+    // Otherwise allow normal movement
+    KeyBinding.setKeyBindState(
+            mc.gameSettings.keyBindLeft.getKeyCode(),
+            Keyboard.isKeyDown(mc.gameSettings.keyBindLeft.getKeyCode())
+    );
+
+    KeyBinding.setKeyBindState(
+            mc.gameSettings.keyBindRight.getKeyCode(),
+            Keyboard.isKeyDown(mc.gameSettings.keyBindRight.getKeyCode())
+    );
+}
 
     private void resetStrafe() {
         isStrafing = false;
