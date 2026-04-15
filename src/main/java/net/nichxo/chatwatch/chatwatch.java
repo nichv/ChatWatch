@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 import org.lwjgl.input.Keyboard;
 
-@Mod(modid = "chatwatch", name = "ChatWatch", version = "1.6.8", clientSideOnly = true)
+@Mod(modid = "chatwatch", name = "ChatWatch", version = "26.4.15", clientSideOnly = true)
 public class chatwatch {
 
     private final Minecraft mc = Minecraft.getMinecraft();
@@ -22,7 +22,7 @@ public class chatwatch {
     private boolean isStrafing = false;
     private boolean strafeLeft = false;
     private long strafeEndTime = 0;
-    private long nextStrafeTime = System.currentTimeMillis() + 60000;
+    private long nextStrafeTime = System.currentTimeMillis() + 50000;
 
     private long pauseStrafeUntil = 0;
 
@@ -52,7 +52,7 @@ public class chatwatch {
             chatWatchActive = true;
             mc.displayGuiScreen(new GuiChat());
 
-            pauseStrafeUntil = currentTime + 60000 + (long)(Math.random() * 8000);
+            pauseStrafeUntil = currentTime + 43000 + (long)(Math.random() * 8000);
         }
 
         // --------------------
@@ -98,7 +98,7 @@ public class chatwatch {
                 isStrafing = true;
 
                 strafeLeft = Math.random() < 0.5;
-                long duration = 500 + (long)(Math.random() * 900);
+                long duration = 444 + (long)(Math.random() * 900);
                 strafeEndTime = currentTime + duration;
             }
 
@@ -118,7 +118,7 @@ public class chatwatch {
 				isStrafing = false;
 
 			// 1 minute delay (+ small randomness)
-			nextStrafeTime = currentTime + 60000 + (long)(Math.random() * 5000);
+			nextStrafeTime = currentTime + 50000 + (long)(Math.random() * 5000);
 
 			stopMovement();
 			}
