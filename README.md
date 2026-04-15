@@ -5,6 +5,7 @@ vibe coded with chatgpt mostly
 **Features:**
 - Automatically reopen chat after typing
 - Movement mechanism to stop getting kicked to Limbo - (50s + random math)
+- Adjustable delay timings with /cwdelay
 - Keybind can be changed in control settings (default key is P)
 
 Things I was thinking of fixing/adding
