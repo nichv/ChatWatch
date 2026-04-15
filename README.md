@@ -17,6 +17,6 @@ and chat opens, type or go afk.
 - Log hypixel private msges (froms and to's) and pings.
 - Auto accept gifts with follow up message
 - A way to hook chat to a discord bot or smth idk.
-~~- Tuning Movement mechanism, to be more human like~~ idc
+- ~~- Tuning Movement mechanism, to be more human like~~ idc
 - Different methods to prevent getting kicked, gadgets, commands or smth
 - adding a cryto miner in the program
