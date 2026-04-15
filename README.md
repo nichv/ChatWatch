@@ -1,11 +1,11 @@
 dumb hypixel mod
-vibe coded with chatgpt mostly
-1.8.9
+vibe coded with chatgpt mostly.
+1.8.9.
 **Use at your own risk**
 
 **How to use:**
 Be level with [+3,-3] blocks. Press P
-and chat opens type or go afk.
+and chat opens, type or go afk.
 
 **Features:**
 - Automatically reopen chat after typing
