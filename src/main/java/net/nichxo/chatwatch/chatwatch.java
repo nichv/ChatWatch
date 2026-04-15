@@ -98,7 +98,7 @@ public class chatwatch {
                 isStrafing = true;
 
                 strafeLeft = Math.random() < 0.5;
-                long duration = 444 + (long)(Math.random() * 900);
+                long duration = 222 + (long)(Math.random() * 900);
                 strafeEndTime = currentTime + duration;
             }
 
