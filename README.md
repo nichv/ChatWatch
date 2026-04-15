@@ -1,6 +1,7 @@
 dumb hypixel mod
 vibe coded with chatgpt mostly.
 1.8.9.
+
 **Use at your own risk**
 
 **How to use:**
