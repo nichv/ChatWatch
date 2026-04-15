@@ -3,7 +3,7 @@
   "modid": "chatwatch",
   "name": "ChatWatch",
   "description": "Watch the chat indefinitely for the Hypixel Network.",
-  "version": "26.4.15",
+  "version": "26.4.15-b1",
   "mcversion": "1.8.9",
   "url": "https://github.com/nichv",
   "updateUrl": "",
